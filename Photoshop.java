@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PShape;
@@ -18,7 +19,7 @@ public class Photoshop extends PApplet{
         size(800,600);
     }
     public void setup(){
-        fill(120, 50, 240);
+        fill(255, 255, 255);
         ArrayList<Float> polozenie = new ArrayList();
         ustawLokacje(polozenie, 10, 10, 100, 20); 
         wyborObrazu = createShape(RECT, 10, 10, 100, 20);
@@ -49,8 +50,13 @@ public class Photoshop extends PApplet{
         float x = polozenie.get(0), y = polozenie.get(1);
         if(mouseX > x && mouseX < x + polozenie.get(2) && mouseY > y && mouseY < y + polozenie.get(3)){
             JFileChooser fileChooser = new JFileChooser();
-            if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION){
-                File selectedFile = fileChooser.getSelectedFile();
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("JPEG", "jpg", "jpeg", "jpe"));
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("GIF", "gif"));
+            fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("PNG", "png"));
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            File selectedFile; 
+            if(fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION && (selectedFile = fileChooser.getSelectedFile()).exists()
+                    && selectedFile.getAbsolutePath().matches(".+\\.(jpg|jpeg|jpe|gif|png)")){
                 img = loadImage(selectedFile.getAbsolutePath());
                 image(img, 10, 50);
             }
